@@ -1,0 +1,9 @@
+---
+- name: Import Active Directory PowerShell Module
+  win_powershell:
+    script: |
+      Import-Module ActiveDirectory
+
+- include_tasks: query_hostnames.yml
+- include_tasks: query_users.yml
+- include_tasks: query_groups.yml

@@ -1,0 +1,10 @@
+---
+- name: Query AD for Users
+  win_powershell:
+    script: |
+      Get-ADUser -Filter * | Select-Object -Property SamAccountName, Name
+  register: ad_users
+
+- name: Display Users
+  debug:
+    msg: "{{ ad_users.stdout_lines }}"

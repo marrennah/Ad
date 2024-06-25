@@ -1,0 +1,5 @@
+---
+- name: Query Active Directory
+  hosts: windows
+  roles:
+    - ad_query

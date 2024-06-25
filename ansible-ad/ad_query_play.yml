@@ -1,0 +1,38 @@
+---
+- name: Query Active Directory
+  hosts: windows
+  tasks:
+    - name: Import Active Directory PowerShell Module
+      win_powershell:
+        script: |
+          Import-Module ActiveDirectory
+
+    - name: Query AD for Hostnames
+      win_powershell:
+        script: |
+          Get-ADComputer -Filter * | Select-Object -Property Name
+      register: ad_hostnames
+
+    - name: Query AD for Users
+      win_powershell:
+        script: |
+          Get-ADUser -Filter * | Select-Object -Property SamAccountName, Name
+      register: ad_users
+
+    - name: Query AD for Groups
+      win_powershell:
+        script: |
+          Get-ADGroup -Filter * | Select-Object -Property SamAccountName, Name
+      register: ad_groups
+
+    - name: Display Hostnames
+      debug:
+        msg: "{{ ad_hostnames.stdout_lines }}"
+
+    - name: Display Users
+      debug:
+        msg: "{{ ad_users.stdout_lines }}"
+
+    - name: Display Groups
+      debug:
+        msg: "{{ ad_groups.stdout_lines }}"

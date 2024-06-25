@@ -1,0 +1,10 @@
+---
+- name: Query AD for Hostnames
+  win_powershell:
+    script: |
+      Get-ADComputer -Filter * | Select-Object -Property Name
+  register: ad_hostnames
+
+- name: Display Hostnames
+  debug:
+    msg: "{{ ad_hostnames.stdout_lines }}"

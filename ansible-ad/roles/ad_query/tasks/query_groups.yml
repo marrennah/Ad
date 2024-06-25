@@ -1,0 +1,10 @@
+---
+- name: Query AD for Groups
+  win_powershell:
+    script: |
+      Get-ADGroup -Filter * | Select-Object -Property SamAccountName, Name
+  register: ad_groups
+
+- name: Display Groups
+  debug:
+    msg: "{{ ad_groups.stdout_lines }}"
