@@ -1,0 +1,7 @@
+---
+windows:
+  children:
+    windows_ad:
+      hosts:
+        #servername:
+          ansible_hosts: #ip

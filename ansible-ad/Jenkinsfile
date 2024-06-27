@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    environment {
+        ANSIBLE_PLAYBOOK = 'ad-playbook.yml'
+        INVENTORY_FILE = 'groupvars.yml'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout ([])
+            }
+        }
+
+        stage('Install Ansible') {
+            steps {
+                script {
+                    // Install Ansible on the Jenkins agent, if not alredy installed
+                    sh '''
+                    if ! command -v ansible &> /dev/null
+                    then
+                       echo "Ansible could not be found. Installing..."
+                       apt-get update
+                       apt-get install -y ansible
+                    else
+                        echo "Ansible is already installed"
+                    fi
+                    '''
+                    
+                }
+            }
+        }
+
+        stage('Run AD Query Playbook') {
+            steps {
+                script {
+                    // Run the main playbook with the hosts file
+                    sh "ansible-playbook -i ${INVENTORY_FILE} ${ANSIBLE_PLAYBOOK}"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'AD Query playbook ran successfully!'
+        }
+        failure {
+            echo 'AD Query playbook failed!'
+        }
+    }
+}
